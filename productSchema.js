@@ -4,5 +4,6 @@ const productSchema = new mongoose.Schema({
     brand: String,
     price: String,
     category: String,
+    rimg:String
   });
   module.exports=mongoose.model("students",productSchema);

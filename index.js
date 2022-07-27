@@ -8,11 +8,41 @@ const app=express();
 const cors=require("cors")
 const Jwt = require('jsonwebtoken');
 const jwtKey = 'e-com';
+var bodyParser = require('body-parser');
+
+const multer = require('multer');
+
+
 
 app.use(express.json());
 app.use(cors());
-app.post("/post", async (req,resp) => {
-   let user=new productSchema1(req.body); //This line for retrive data from postmen
+app.use('/uploads',express.static('uploads'))
+const upload = multer({
+  storage: multer.diskStorage({
+      destination: function (req, file, cb) {
+          cb(null, 'uploads')
+      },
+
+      filename: function (req, file, cb) {
+          cb(null, file.fieldname + "-" + Date.now() + ".jpg")
+      }
+      
+  })
+}).single('file');
+
+app.post("/post",upload, async (req,resp) => {
+ console.log(req.body)
+   let user=new productSchema1({
+    name:req.body.name,
+    email:req.body.email,
+    password:req.body.name
+   // img:req.file.filename  
+   }); //This line for retrive data from postmen
+   if(req.file){
+
+    user.img=req.file.filename  
+
+   }
    let result = await user.save();
    result = result.toObject();
    delete result.password
@@ -121,6 +151,12 @@ resp.status(403).send({result:'please add token with header'})
   
 }
 
+app.get("/", async (req, recp) => {
+  let data = await productSchema.find({});
+  recp.send(data);
+  console.log(data);
+  //console.log(data)
+});
 
 
 

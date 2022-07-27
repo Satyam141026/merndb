@@ -1,9 +1,10 @@
 const mongoose=require('mongoose');
-const productSchema1 = new mongoose.Schema({
+const A = new mongoose.Schema({
     name: String,
     password: String,
     email: String,
     img:String
   
   });
-  module.exports=mongoose.model("student",productSchema1);
+  
+  module.exports=mongoose.model("student",A);
